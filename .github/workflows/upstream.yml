@@ -11,8 +11,8 @@ on:
   push:
     paths:
       - '.github/workflows/upstream.yml'
-  schedule:
-    - cron: 0 */12 * * *
+  #schedule:
+  #  - cron: 0 */12 * * *
   watch:
     types: started
   repository_dispatch:
@@ -38,19 +38,22 @@ jobs:
       run: |
         rm -rf `find -maxdepth 1 -type d -name "[!.]*" ! -path "./diy"`
         git rm -r --cache *
-        git clone --depth 1 https://github.com/garypang13/my-packages && mv -f my-packages/* ./ ; rm -Rf my-packages
-        git clone --depth 1 https://github.com/garypang13/luci-app-bypass
+        git clone --depth 1 https://github.com/esirplayground/luci-app-poweroff
+        git clone --depth 1 https://github.com/gogogojason/logos.git
+        git clone --depth 1 https://github.com/garypang13/openwrt-packages/trunk/luci-app-gpsysupgrade
+        svn co https://github.com/garypang13/openwrt-packages/trunk/luci-app-bypass
         git clone --depth 1 https://github.com/garypang13/luci-app-dnsfilter
         git clone --depth 1 https://github.com/garypang13/openwrt-static-qb
         git clone --depth 1 https://github.com/garypang13/openwrt-aria2-enhanced
         git clone --depth 1 https://github.com/garypang13/openwrt-smartdns && mv -f openwrt-smartdns/* ./ ; rm -Rf openwrt-smartdns
-        git clone --depth 1 https://github.com/garypang13/openwrt-adguardhome AdGuardHome
+        svn co https://github.com/kenzok8/openwrt-packages/trunk/adguardhome
+        svn co https://github.com/rufengsuixing/luci-app-adguardhome/trunk ./luci-app-adguardhome
         git clone --depth 1 https://github.com/garypang13/luci-app-eqos
         git clone --depth 1 https://github.com/garypang13/luci-app-amule
         git clone --depth 1 https://github.com/garypang13/luci-app-xlnetacc
         git clone --depth 1 https://github.com/garypang13/openwrt-filerun && mv -f openwrt-filerun/* ./ ; rm -Rf openwrt-filerun
         git clone --depth 1 https://github.com/garypang13/luci-app-baidupcs-web
-        git clone --depth 1 https://github.com/garypang13/luci-theme-edge
+        svn co https://github.com/garypang13/luci-theme-edge/branches/18.06 ./luci-theme-edge
         git clone --depth 1 https://github.com/garypang13/autosamba
         git clone --depth 1 https://github.com/garypang13/luci-app-homebridge
         git clone --depth 1 https://github.com/garypang13/openwrt-openvpn && mv -f openwrt-openvpn/* ./ ; rm -Rf openwrt-openvpn
@@ -71,7 +74,9 @@ jobs:
         git clone --depth 1 https://github.com/small-5/ddns-scripts-aliyun
         git clone --depth 1 https://github.com/walkingsky/luci-wifidog luci-app-wifidog
         git clone --depth 1 https://github.com/peter-tank/luci-app-autorepeater
-        git clone --depth 1 https://github.com/zzsj0928/luci-app-serverchand
+        git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config
+        svn co https://github.com/project-openwrt/openwrt/trunk/package/ntlf9t/luci-app-advancedsetting
+        svn co https://github.com/tty228/luci-app-serverchan/trunk ./luci-app-serverchan
         svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
         svn co https://github.com/Lienol/openwrt/trunk/package/network/fullconenat && rm -f fullconenat/patches/000-printk.patch
         svn co https://github.com/srchack/custom-packages/trunk/open-vm-tools
@@ -120,7 +125,6 @@ jobs:
         bash diy/convert_translation.sh -a || true
         sed -i 's/..\/..\/luci.mk/$(TOPDIR)\/feeds\/luci\/luci.mk/g' */Makefile
         rm -Rf antileech/src && git clone https://github.com/persmule/amule-dlp.antiLeech antileech/src
-        sed -i '/\/etc\/config\/AdGuardHome/a /etc/config/AdGuardHome.yaml' luci-app-adguardhome/Makefile
         sed -i 's/+rclone\( \|$\)/+rclone +fuse-utils\1/g' luci-app-rclone/Makefile
         sed -i 's/ca-certificates/ca-bundle/g' */Makefile
         sed -i 's/ +kmod-fs-exfat//g' automount/Makefile
@@ -137,6 +141,21 @@ jobs:
         sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion c0re100/qBittorrent-Enhanced-Edition)/g" qBittorrent-Enhanced-Edition/Makefile
         sed -i "s/PKG_HASH:=.*/PKG_HASH:=skip/g" */Makefile
         sed -i 's/SUBDIRS=/M=/g' */Makefile
+        sed -i 's/https:\/\/op.supes.top/http:\/\/openwrt.ink:8666/g' ./luci-app-gpsysupgrade/root/usr/bin/upgrade.lua
+        sed -i 's/https:\/\/op.supes.top/http:\/\/openwrt.ink:8666/g' ./luci-app-gpsysupgrade/luasrc/model/cbi/gpsysupgrade/sysupgrade.lua
+        rm -f ./luci-app-gpsysupgrade/luasrc/view/admin_status/index/links.htm
+        rm -f ./luci-app-gpsysupgrade/po/zh_Hans/gpsysupgrade.po
+        cp logos/oplinks.htm ./luci-app-gpsysupgrade/luasrc/view/admin_status/index/links.htm
+        mkdir -p ./luci-app-gpsysupgrade/po/zh-cn
+        cp logos/opgpsysupgrade.po ./luci-app-gpsysupgrade/po/zh-cn/gpsysupgrade.po
+        rm -f ./luci-app-bypass/po/zh_Hans/bypass.zh-cn.po
+        mkdir -p ./luci-app-bypass/po/zh-cn
+        cp logos/opbypass.zh-cn.po ./luci-app-bypass/po/zh-cn/bypass.zh-cn.po
+        sed -i 's/zh_Hans/zh-cn/g' ./luci-app-bypass/Makefile
+        sed -i 's/"内网控速"/"网速控制"/g' ./luci-app-eqos/files/po/zh-cn/eqos.po
+        sed -i 's/${Arch}/${Arch}_softfloat/g' ./luci-app-adguardhome/root/usr/share/AdGuardHome/links.txt
+        sed -i 's/"Argon设置"/"Argon 主题设置"/g' ./luci-app-argon-config/po/zh-cn/argon-config.po
+        sed -i 's/msgid "Socat"/msgid "端口转发"/g' ./luci-app-socat/po/zh-cn/socat.po
     - name: Apply patches
       run: find "diy/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward --no-backup-if-mismatch"
 
