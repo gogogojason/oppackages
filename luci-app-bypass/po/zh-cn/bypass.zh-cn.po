@@ -1,9 +1,3 @@
-msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8\n"
-
-msgid "Bypass"
-msgstr "Passwall+"
-
 msgid "Base Setting"
 msgstr "基本设置"
 
