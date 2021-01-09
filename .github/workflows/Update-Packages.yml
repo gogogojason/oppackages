@@ -85,6 +85,7 @@ jobs:
         svn co https://github.com/coolsnowwolf/packages/trunk/net/miniupnpd
         svn co https://github.com/coolsnowwolf/packages/trunk/net/mwan3
         svn co https://github.com/brvphoenix/wrtbwmon/trunk/wrtbwmon
+        svn co https://github.com/Lienol/openwrt-luci/trunk/19.07/modules
         
         rm -rf .svn
         echo -e "\q" | svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean ./
