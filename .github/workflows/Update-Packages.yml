@@ -138,6 +138,9 @@ jobs:
         sed -i "s/PKG_VERSION:=.*/PKG_VERSION:=$(getversion c0re100/qBittorrent-Enhanced-Edition)/g" qBittorrent-Enhanced-Edition/Makefile
         sed -i "s/PKG_HASH:=.*/PKG_HASH:=skip/g" */Makefile
         sed -i 's/SUBDIRS=/M=/g' */Makefile
+        sed -i 's/https:\/\/op.supes.top/http:\/\/openwrt.ink:8666/g' luci-app-gpsysupgrade/root/usr/bin/upgrade.lua
+        sed -i 's/https:\/\/op.supes.top/http:\/\/openwrt.ink:8666/g' luci-app-gpsysupgrade/luasrc/model/cbi/gpsysupgrade/sysupgrade.lua
+        
     - name: Apply patches
       run: find "diy/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward --no-backup-if-mismatch"
 
